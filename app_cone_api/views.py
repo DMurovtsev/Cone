@@ -14,10 +14,13 @@ class ConeApiView(APIView):
         for param in self.params:
             if param not in request.GET:
                 return Response({'error': f'no parameter {param}'})
+        try:
+            height = int(request.GET.get("height"))
+            radius = int(request.GET.get("radius"))
+            segments = int(request.GET.get("segments"))
 
-        height = int(request.GET.get("height"))
-        radius = int(request.GET.get("radius"))
-        segments = int(request.GET.get("segments"))
+        except ValueError:
+            return Response({'error': 'all parameters must be integers'})
 
         # Вычисление угла между каждым сегментом
         angle = 2 * numpy.pi / segments
